@@ -34,7 +34,7 @@ namespace nikserg\tinkoffApiUc\models;
 ]
 }
  */
-class KepRequest extends Request
+class KepRequest
 {
     const DISABLE_CROSSSALE_ALL = "ALL";
     const DISABLE_CROSSSALE_CASHBOX = "CASHBOX";

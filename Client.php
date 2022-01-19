@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\RequestOptions;
 use nikserg\tinkoffApiUc\exceptions\TinkoffApiException;
 use nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException;
+use nikserg\tinkoffApiUc\models\IdResponse;
 
 class Client
 {
@@ -30,8 +31,9 @@ class Client
     }
 
     /**
-     * @param $request
-     * @return void
+     * @param \nikserg\tinkoffApiUc\models\KepRequest $request
+     * @return \nikserg\tinkoffApiUc\models\IdResponse
+     * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
      */
     private function send($request)
     {
@@ -45,17 +47,19 @@ class Client
                 throw $exception;
             }
         }
-        print_r($request);
-        exit;
+        $response = $request->getBody()->getContents();
+        return new IdResponse($response);
     }
 
     /**
-     * @see https://business.tinkoff.ru/openapi/docs/#operation/postApiV1Qualified-digital-signatureIssue
      * @param \nikserg\tinkoffApiUc\models\KepRequest $request
+     * @return string GUID
+     * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
      */
     public function requestKep($request)
     {
-        return $this->send($request->prepare());
+        $response = $this->send($request);
+        return $response->issueRequestId;
     }
 
 
