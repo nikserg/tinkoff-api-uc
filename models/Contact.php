@@ -23,7 +23,7 @@ namespace nikserg\tinkoffApiUc\models;
 }
 },
  */
-class Contact
+class Contact implements Sanitizeable
 {
     public $firstName;
     public $lastName;
@@ -37,4 +37,17 @@ class Contact
      * @var \nikserg\tinkoffApiUc\models\Document
      */
     public $document;
+
+    function sanitize()
+    {
+        $return = (array)$this;
+        $return['phoneNumber'] = str_replace(' ', '', $return['phoneNumber']);
+        $return['phoneNumber'] = str_replace('(', '', $return['phoneNumber']);
+        $return['phoneNumber'] = str_replace('-', '', $return['phoneNumber']);
+        $return['phoneNumber'] = str_replace(')', '', $return['phoneNumber']);
+
+        $return['snils'] = str_replace(' ', '', $return['snils']);
+        $return['snils'] = str_replace('-', '', $return['snils']);
+        return $return;
+    }
 }
