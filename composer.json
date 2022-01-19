@@ -1,18 +1,22 @@
 {
-    "name": "nikserg/tinkoff-api-uc",
-    "description": "API для работы с УЦ Тинькофф",
-    "keywords": ["tinkoff", "tinkoff api"],
-    "authors": [
-        {
-            "name": "Nikita Zarubin",
-            "email": "nikitadimitrov@gmail.com"
-        }
-    ],
-    "autoload": {
-      "psr-4": {
-        "nikserg\\tinkoffApiUc\\": ""
-      }
-    },
-    "require": {
+  "name": "nikserg/tinkoff-api-uc",
+  "description": "API для работы с УЦ Тинькофф",
+  "keywords": [
+    "tinkoff",
+    "tinkoff api"
+  ],
+  "authors": [
+    {
+      "name": "Nikita Zarubin",
+      "email": "nikitadimitrov@gmail.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "nikserg\\tinkoffApiUc\\": ""
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "*"
+  }
 }
