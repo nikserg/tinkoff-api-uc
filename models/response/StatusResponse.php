@@ -23,12 +23,58 @@ namespace nikserg\tinkoffApiUc\models\response;
  */
 class StatusResponse extends Response
 {
+    const STATUS_SMEV_CHECK_IN_PROGRESS = 'SMEV_CHECK_IN_PROGRESS';
+    const STATUS_SMEV_CHECK_FAILED = 'SMEV_CHECK_FAILED ';
+    const STATUS_MEETING_PREPARATION = 'MEETING_PREPARATION';
+    const STATUS_MEETING_IN_PROGRESS = 'MEETING_IN_PROGRESS';
+    const STATUS_MEETING_FAILED = 'MEETING_FAILED';
+    const STATUS_CERT_ISSUE_IN_PROGRESS = 'CERT_ISSUE_IN_PROGRESS';
+    const STATUS_CERT_ISSUE_FAILED = 'CERT_ISSUE_FAILED';
+    const STATUS_ESIA_IN_PROGRESS = 'ESIA_IN_PROGRESS';
+    const STATUS_ESIA_FAILED = 'ESIA_FAILED';
+    const STATUS_SUCCESS = 'SUCCESS';
+
+    const STATUS_NAMES = [
+        self::STATUS_SMEV_CHECK_IN_PROGRESS => 'Выполняется проверка данных СМЭВ',
+        self::STATUS_SMEV_CHECK_FAILED      => 'Проверка данных СМЭВ завершена с ошибкой',
+        self::STATUS_MEETING_PREPARATION    => 'Подготовка к встрече с представителем',
+        self::STATUS_MEETING_IN_PROGRESS    => 'Встреча с представителем назначена',
+        self::STATUS_MEETING_FAILED         => 'Встреча с представителем завершилась неудачно',
+        self::STATUS_CERT_ISSUE_IN_PROGRESS => 'Выполняется выпуск КЭП',
+        self::STATUS_CERT_ISSUE_FAILED      => 'Произошла ошибка при выпуске КЭП',
+        self::STATUS_ESIA_IN_PROGRESS       => 'Выполняется регистрация в ЕСИА',
+        self::STATUS_ESIA_FAILED            => 'Произошла ошибка при регистрации в ЕСИА',
+        self::STATUS_SUCCESS                => 'Заявка выполнена',
+    ];
+
+
     public $status;
-    public $statusCheckList;
+    /**
+     * @var \nikserg\tinkoffApiUc\models\response\StatusCheckList
+     */
+    public $statusChecklist;
     public $partnerDeliveryId;
     public $certRequestExpectedSubject;
     public $ownerCheckExpiresAt;
     public $createdAt;
     public $updatedAt;
+    /**
+     * @var \nikserg\tinkoffApiUc\models\response\Error
+     */
+    public $error;
 
+    /**
+     * @return string|null
+     */
+    public function getStatusString()
+    {
+        return self::STATUS_NAMES[$this->status];
+    }
+
+    public function __construct($json)
+    {
+        parent::__construct($json);
+        $this->setFieldAsClass('statusChecklist', '\nikserg\tinkoffApiUc\models\response\StatusCheckList');
+        $this->setFieldAsClass('error', '\nikserg\tinkoffApiUc\models\response\Error');
+    }
 }

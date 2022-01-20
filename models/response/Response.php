@@ -4,7 +4,6 @@ namespace nikserg\tinkoffApiUc\models\response;
 
 abstract class Response
 {
-
     public function __construct($json)
     {
         $decoded = \GuzzleHttp\json_decode($json, true);
@@ -13,4 +12,14 @@ abstract class Response
         }
     }
 
+    protected function setFieldAsClass($fieldName, $className)
+    {
+        $data = $this->{$fieldName};
+        if ($data) {
+            $this->{$fieldName} = new $className();
+            foreach ($data as $key => $value) {
+                $this->{$fieldName}->{$key} = $value;
+            }
+        }
+    }
 }
