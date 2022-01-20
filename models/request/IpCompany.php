@@ -1,6 +1,6 @@
 <?php
 
-namespace nikserg\tinkoffApiUc\models;
+namespace nikserg\tinkoffApiUc\models\request;
 
 /**
  * "company": {

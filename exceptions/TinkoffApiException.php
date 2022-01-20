@@ -3,11 +3,15 @@
 namespace nikserg\tinkoffApiUc\exceptions;
 
 
-class TinkoffApiException extends \Exception {
+use Exception;
+
+class TinkoffApiException extends Exception
+{
     public $tinkoffErrorId;
     public $tinkoffErrorCode;
     public $tinkoffErrorMessage;
     public $tinkoffErrorDetails;
+
     public function __construct($json, $httpCode, $previous = null)
     {
         $decoded = @\GuzzleHttp\json_decode($json, true);
@@ -23,6 +27,7 @@ class TinkoffApiException extends \Exception {
         if (isset($decoded['errorDetails'])) {
             $this->tinkoffErrorDetails = $decoded['errorDetails'];
         }
-        parent::__construct('#'.$this->tinkoffErrorId.' '.$this->tinkoffErrorCode.': '.$this->tinkoffErrorMessage . ' '.print_r($this->tinkoffErrorDetails, true), $httpCode, $previous);
+        parent::__construct('#' . $this->tinkoffErrorId . ' ' . $this->tinkoffErrorCode . ': ' . $this->tinkoffErrorMessage . ' ' . print_r($this->tinkoffErrorDetails,
+                true), $httpCode, $previous);
     }
 }

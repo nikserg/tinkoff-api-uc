@@ -4,12 +4,15 @@ namespace nikserg\tinkoffApiUc;
 
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\RequestOptions;
-use nikserg\tinkoffApiUc\exceptions\TinkoffApiException;
 use nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException;
-use nikserg\tinkoffApiUc\models\IdResponse;
+use nikserg\tinkoffApiUc\models\response\IdResponse;
+use nikserg\tinkoffApiUc\models\response\StatusResponse;
 
 class Client
 {
+    const CREATE_ISSUE = 'api/v1/qualified-digital-signature/issue';
+    const ISSUE_INFO = 'api/v1/qualified-digital-signature/issue';
+
     protected $guzzle;
 
     /**
@@ -31,14 +34,20 @@ class Client
     }
 
     /**
-     * @param \nikserg\tinkoffApiUc\models\KepRequest $request
-     * @return \nikserg\tinkoffApiUc\models\IdResponse
+     * @param string                                          $url
+     * @param string                                          $method `post`, `get`, `put`
+     * @param \nikserg\tinkoffApiUc\models\request\KepRequest $request
+     * @return string JSON ответа
      * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
      */
-    private function send($request)
+    private function send($url, $method, $request = null)
     {
         try {
-            $request = $this->guzzle->post('api/v1/qualified-digital-signature/issue', [RequestOptions::JSON => $request]);
+            $options = [];
+            if ($request) {
+                $options = [RequestOptions::JSON => $request];
+            }
+            $request = $this->guzzle->{$method}($url, $options);
         } catch (ClientException $exception) {
             if (in_array($exception->getResponse()->getStatusCode(), [401, 400])) {
                 $response = $exception->getResponse()->getBody()->getContents();
@@ -47,19 +56,28 @@ class Client
                 throw $exception;
             }
         }
-        $response = $request->getBody()->getContents();
-        return new IdResponse($response);
+
+        return $request->getBody()->getContents();
     }
 
     /**
-     * @param \nikserg\tinkoffApiUc\models\KepRequest $request
+     * @param \nikserg\tinkoffApiUc\models\request\KepRequest $request
      * @return string GUID
      * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
      */
     public function requestKep($request)
     {
-        $response = $this->send($request);
-        return $response->issueRequestId;
+        return (new IdResponse($this->send(self::CREATE_ISSUE, 'post', $request)))->issueRequestId;
+    }
+
+    /**
+     * @param string $guid
+     * @return \nikserg\tinkoffApiUc\models\response\StatusResponse
+     * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
+     */
+    public function getKepStatus($guid)
+    {
+        return (new StatusResponse($this->send(self::ISSUE_INFO . '/' . $guid . '/status', 'get')));
     }
 
 
