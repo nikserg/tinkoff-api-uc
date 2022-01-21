@@ -59,4 +59,15 @@ class Error
     public $errorCode;
     public $errorDetails;
 
+    public function __toString()
+    {
+        $checks = [];
+        if (isset($this->errorDetails['checks'])) {
+            foreach ($this->errorDetails['checks'] as $check) {
+                $checks[] = $check['serviceKind'] . ' ' . $check['status'] . ': ' . $check['errorMessage'];
+            }
+        }
+
+        return "Ошибка ДУЦ: " . $this->errorMessage . ". Проверки: " . implode("; ", $checks);
+    }
 }

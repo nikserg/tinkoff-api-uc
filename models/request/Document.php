@@ -37,6 +37,7 @@ class Document
      */
     public function setSeries($series)
     {
+        $series = str_replace(' ', '', $series);
         $this->series = $series;
     }
 

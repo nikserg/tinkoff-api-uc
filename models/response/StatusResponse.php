@@ -24,7 +24,7 @@ namespace nikserg\tinkoffApiUc\models\response;
 class StatusResponse extends Response
 {
     const STATUS_SMEV_CHECK_IN_PROGRESS = 'SMEV_CHECK_IN_PROGRESS';
-    const STATUS_SMEV_CHECK_FAILED = 'SMEV_CHECK_FAILED ';
+    const STATUS_SMEV_CHECK_FAILED = 'SMEV_CHECK_FAILED';
     const STATUS_MEETING_PREPARATION = 'MEETING_PREPARATION';
     const STATUS_MEETING_IN_PROGRESS = 'MEETING_IN_PROGRESS';
     const STATUS_MEETING_FAILED = 'MEETING_FAILED';
@@ -47,6 +47,21 @@ class StatusResponse extends Response
         self::STATUS_SUCCESS                => 'Заявка выполнена',
     ];
 
+    /**
+     * Является ли статус ошибочным
+     *
+     *
+     * @return bool
+     */
+    public function isErrorState()
+    {
+        return in_array($this->status, [
+            self::STATUS_ESIA_FAILED,
+            self::STATUS_CERT_ISSUE_FAILED,
+            self::STATUS_MEETING_FAILED,
+            self::STATUS_SMEV_CHECK_FAILED,
+        ]);
+    }
 
     public $status;
     /**
