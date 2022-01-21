@@ -6,12 +6,14 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\RequestOptions;
 use nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException;
 use nikserg\tinkoffApiUc\models\response\IdResponse;
+use nikserg\tinkoffApiUc\models\response\IssueRequestIdResponse;
 use nikserg\tinkoffApiUc\models\response\StatusResponse;
 
 class Client
 {
     const CREATE_ISSUE = 'api/v1/qualified-digital-signature/issue';
     const ISSUE_INFO = 'api/v1/qualified-digital-signature/issue';
+    const CREATE_DELIVERY = 'api/v1/delivery/tasks';
 
     protected $guzzle;
 
@@ -61,16 +63,22 @@ class Client
     }
 
     /**
+     * Создать новый запрос на выпуск сертификата
+     *
+     *
      * @param \nikserg\tinkoffApiUc\models\request\KepRequest $request
      * @return string GUID
      * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
      */
     public function requestKep($request)
     {
-        return (new IdResponse($this->send(self::CREATE_ISSUE, 'post', $request)))->issueRequestId;
+        return (new IssueRequestIdResponse($this->send(self::CREATE_ISSUE, 'post', $request)))->issueRequestId;
     }
 
     /**
+     * Статус запроса на выпуск сертификата
+     *
+     *
      * @param string $guid
      * @return \nikserg\tinkoffApiUc\models\response\StatusResponse
      * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
@@ -80,5 +88,16 @@ class Client
         return (new StatusResponse($this->send(self::ISSUE_INFO . '/' . $guid . '/status', 'get')));
     }
 
+    /**
+     * Создать задание на доставку
+     *
+     * @param $request
+     * @return string
+     * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
+     */
+    public function createDeliveryTask($request)
+    {
+        return (new IdResponse($this->send(self::CREATE_DELIVERY, 'post', $request)))->id;
+    }
 
 }

@@ -2,12 +2,12 @@
 
 namespace nikserg\tinkoffApiUc\models\response;
 
-class IdResponse extends Response
+class IssueRequestIdResponse extends Response
 {
     /**
      * @var string GUID
      */
-    public $id;
+    public $issueRequestId;
 
 
 }
