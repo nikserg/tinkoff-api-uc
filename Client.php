@@ -31,6 +31,7 @@ class Client
             'headers'  => [
                 'Authorization' => 'Bearer ' . $token,
             ],
+            'debug'    => 1,
         ]);
     }
 
@@ -38,15 +39,16 @@ class Client
      * @param string                                          $url
      * @param string                                          $method `post`, `get`, `put`
      * @param \nikserg\tinkoffApiUc\models\request\KepRequest $request
+     * @param string                                          $bodyFormat Формат тела запроса, по умолчанию json
      * @return string JSON ответа
      * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
      */
-    private function send($url, $method, $request = null)
+    private function send($url, $method, $request = null, $bodyFormat = RequestOptions::JSON)
     {
         try {
             $options = [];
             if ($request) {
-                $options = [RequestOptions::JSON => $request];
+                $options = [$bodyFormat => $request];
             }
             $request = $this->guzzle->{$method}($url, $options);
         } catch (ClientException $exception) {
@@ -99,7 +101,8 @@ class Client
      */
     public function uploadReqFile($guid, $reqFileContent)
     {
-        $this->send(self::ISSUE . '/' . $guid . '/certificate-request', 'post', $reqFileContent);
+        $this->send(self::ISSUE . '/' . $guid . '/certificate-request', 'put', $reqFileContent,
+            RequestOptions::BODY);
     }
 
     /**
