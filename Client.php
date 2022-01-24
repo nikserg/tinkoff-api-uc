@@ -11,9 +11,8 @@ use nikserg\tinkoffApiUc\models\response\StatusResponse;
 
 class Client
 {
-    const CREATE_ISSUE = 'api/v1/qualified-digital-signature/issue';
-    const ISSUE_INFO = 'api/v1/qualified-digital-signature/issue';
-    const CREATE_DELIVERY = 'api/v1/delivery/tasks';
+    const ISSUE = 'api/v1/qualified-digital-signature/issue';
+    const DELIVERY = 'api/v1/delivery/tasks';
 
     protected $guzzle;
 
@@ -72,7 +71,7 @@ class Client
      */
     public function requestKep($request)
     {
-        return (new IssueRequestIdResponse($this->send(self::CREATE_ISSUE, 'post', $request)))->issueRequestId;
+        return (new IssueRequestIdResponse($this->send(self::ISSUE, 'post', $request)))->issueRequestId;
     }
 
     /**
@@ -85,7 +84,22 @@ class Client
      */
     public function getKepStatus($guid)
     {
-        return (new StatusResponse($this->send(self::ISSUE_INFO . '/' . $guid . '/status', 'get')));
+        return (new StatusResponse($this->send(self::ISSUE . '/' . $guid . '/status', 'get')));
+    }
+
+
+    /**
+     * Загрузить файл запроса
+     *
+     *
+     * @param $guid
+     * @param $reqFileContent
+     * @return void
+     * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
+     */
+    public function uploadReqFile($guid, $reqFileContent)
+    {
+        $this->send(self::ISSUE . '/' . $guid . '/certificate-request', 'post', $reqFileContent);
     }
 
     /**
@@ -97,7 +111,7 @@ class Client
      */
     public function createDeliveryTask($request)
     {
-        return (new IdResponse($this->send(self::CREATE_DELIVERY, 'post', $request)))->id;
+        return (new IdResponse($this->send(self::DELIVERY, 'post', $request)))->id;
     }
 
 }
