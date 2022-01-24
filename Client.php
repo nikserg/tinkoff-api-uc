@@ -51,7 +51,7 @@ class Client
             }
             $request = $this->guzzle->{$method}($url, $options);
         } catch (ClientException $exception) {
-            if (in_array($exception->getResponse()->getStatusCode(), [401, 400])) {
+            if (in_array($exception->getResponse()->getStatusCode(), [401, 400, 422])) {
                 $response = $exception->getResponse()->getBody()->getContents();
                 throw new TinkoffUnauthorizedApiException($response, $exception->getResponse()->getStatusCode());
             } else {
