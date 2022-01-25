@@ -6,8 +6,10 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\RequestOptions;
 use nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException;
 use nikserg\tinkoffApiUc\models\response\DeliveryIntervalsResponse;
+use nikserg\tinkoffApiUc\models\response\DeliveryTaskStatusResponse;
 use nikserg\tinkoffApiUc\models\response\IdResponse;
 use nikserg\tinkoffApiUc\models\response\IssueRequestIdResponse;
+use nikserg\tinkoffApiUc\models\response\MeetingIdResponse;
 use nikserg\tinkoffApiUc\models\response\StatusResponse;
 
 class Client
@@ -131,4 +133,28 @@ class Client
         return (new DeliveryIntervalsResponse($this->send(self::DELIVERY . '/meetings/intervals', 'post', $request)));
     }
 
+    /**
+     * Назначить встречу с курьером
+     *
+     *
+     * @param \nikserg\tinkoffApiUc\models\request\AppointmentRequest $request
+     * @return string
+     * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
+     */
+    public function makeAppointment($request)
+    {
+
+        return (new MeetingIdResponse($this->send(self::DELIVERY . '/meetings', 'post', $request)))->meetingId;
+    }
+
+    /**
+     * @param $guid
+     * @return \nikserg\tinkoffApiUc\models\response\DeliveryTaskStatusResponse
+     * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
+     */
+    public function deliveryTaskStatus($guid)
+    {
+
+        return (new DeliveryTaskStatusResponse($this->send(self::DELIVERY . '/tasks/' . $guid, 'get')));
+    }
 }
