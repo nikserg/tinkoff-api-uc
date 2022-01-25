@@ -5,6 +5,7 @@ namespace nikserg\tinkoffApiUc;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\RequestOptions;
 use nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException;
+use nikserg\tinkoffApiUc\models\response\DeliveryIntervalsResponse;
 use nikserg\tinkoffApiUc\models\response\IdResponse;
 use nikserg\tinkoffApiUc\models\response\IssueRequestIdResponse;
 use nikserg\tinkoffApiUc\models\response\StatusResponse;
@@ -12,7 +13,7 @@ use nikserg\tinkoffApiUc\models\response\StatusResponse;
 class Client
 {
     const ISSUE = 'api/v1/qualified-digital-signature/issue';
-    const DELIVERY = 'api/v1/delivery/tasks';
+    const DELIVERY = 'api/v1/delivery';
 
     protected $guzzle;
 
@@ -109,13 +110,25 @@ class Client
     /**
      * Создать задание на доставку
      *
-     * @param $request
+     * @param \nikserg\tinkoffApiUc\models\request\DeliveryRequest $request
      * @return string
      * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
      */
     public function createDeliveryTask($request)
     {
-        return (new IdResponse($this->send(self::DELIVERY, 'post', $request)))->id;
+        return (new IdResponse($this->send(self::DELIVERY . '/tasks', 'post', $request)))->id;
+    }
+
+    /**
+     * Запросить доступные интервалы доставки
+     *
+     * @param \nikserg\tinkoffApiUc\models\request\DeliveryIntervalsRequest $request
+     * @return \nikserg\tinkoffApiUc\models\response\DeliveryIntervalsResponse
+     * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
+     */
+    public function getDeliveryIntervals($request)
+    {
+        return (new DeliveryIntervalsResponse($this->send(self::DELIVERY . '/meetings/intervals', 'post', $request)));
     }
 
 }
