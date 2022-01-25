@@ -39,10 +39,10 @@ class Client
     }
 
     /**
-     * @param string                                          $url
-     * @param string                                          $method `post`, `get`, `put`
-     * @param \nikserg\tinkoffApiUc\models\request\KepRequest $request
-     * @param string                                          $bodyFormat Формат тела запроса, по умолчанию json
+     * @param string $url
+     * @param string $method `post`, `get`, `put`
+     * @param mixed  $request
+     * @param string $bodyFormat Формат тела запроса, по умолчанию json
      * @return string JSON ответа
      * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
      */
@@ -156,5 +156,18 @@ class Client
     {
 
         return (new DeliveryTaskStatusResponse($this->send(self::DELIVERY . '/tasks/' . $guid, 'get')));
+    }
+
+    /**
+     * Отменить задание на доставку
+     *
+     * @param $guid
+     * @param $reason
+     * @return void
+     * @throws \nikserg\tinkoffApiUc\exceptions\TinkoffUnauthorizedApiException
+     */
+    public function cancelDeliveryTask($guid, $reason)
+    {
+        $this->send(self::DELIVERY . '/tasks/' . $guid . '/cancel', 'post', ['reason' => $reason]);
     }
 }
