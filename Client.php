@@ -31,7 +31,7 @@ class Client
             'headers'  => [
                 'Authorization' => 'Bearer ' . $token,
             ],
-            'debug'    => 1,
+            //'debug'    => 1,
         ]);
     }
 
@@ -101,6 +101,7 @@ class Client
      */
     public function uploadReqFile($guid, $reqFileContent)
     {
+        $reqFileContent = "-----BEGIN NEW CERTIFICATE REQUEST-----\n" . $reqFileContent . "\n-----END NEW CERTIFICATE REQUEST-----";
         $this->send(self::ISSUE . '/' . $guid . '/certificate-request', 'put', $reqFileContent,
             RequestOptions::BODY);
     }
